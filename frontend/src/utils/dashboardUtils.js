@@ -3,12 +3,14 @@ export const calculateMetrics = (projects) => {
     activeProjects: projects.filter((p) => p.status === "pending").length,
     completedAnalyses: projects.filter((p) => p.status === "completed").length,
     pendingReviews: projects.filter((p) => p.status === "issues").length,
-    teamMembers: Math.max(
-      ...projects.map((p) => p.analysis.teamMetrics.participants)
-    ),
     averageCompliance: Math.round(
-      projects.reduce((acc, p) => acc + p.analysis.compliance.score, 0) /
-        projects.length
+      projects.reduce(
+        (acc, p) =>
+          acc +
+          p.compliance_analysis.legal_eligibility.certifications
+            .compliance_score,
+        0
+      ) / projects.length
     ),
   };
 };

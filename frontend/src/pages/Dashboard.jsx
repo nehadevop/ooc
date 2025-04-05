@@ -1,7 +1,6 @@
 import { Row, Col } from "antd";
 import {
   FileTextOutlined,
-  TeamOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
 } from "@ant-design/icons";
@@ -34,28 +33,21 @@ export const Dashboard = () => {
       </h1>
 
       <Row gutter={[16, 16]} style={{ marginBottom: "24px" }}>
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={8}>
           <StatisticCard
             title="Active Projects"
             value={metrics.activeProjects}
             icon={<FileTextOutlined style={{ color: "#1890ff" }} />}
           />
         </Col>
-        <Col xs={24} sm={12} md={6}>
-          <StatisticCard
-            title="Team Members"
-            value={metrics.teamMembers}
-            icon={<TeamOutlined style={{ color: "#722ed1" }} />}
-          />
-        </Col>
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={8}>
           <StatisticCard
             title="Completed Analyses"
             value={metrics.completedAnalyses}
             icon={<CheckCircleOutlined style={{ color: "#52c41a" }} />}
           />
         </Col>
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={8}>
           <StatisticCard
             title="Pending Reviews"
             value={metrics.pendingReviews}

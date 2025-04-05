@@ -1,4 +1,4 @@
-import { Card, Collapse, Tag, Typography } from "antd";
+import { Card, Collapse, Tag, Typography, List } from "antd";
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -11,62 +11,74 @@ const { Title, Text } = Typography;
 export const AnalysisResults = ({ analysis }) => {
   return (
     <Card title="Analysis Results">
-      <Collapse defaultActiveKey={["1", "2", "3", "4"]}>
-        <Panel header="Compliance Check" key="1">
-          {analysis.compliance.map((item, index) => (
-            <div key={index} style={{ marginBottom: "8px" }}>
-              {item.passed ? (
-                <Tag icon={<CheckCircleOutlined />} color="success">
-                  {item.requirement}
-                </Tag>
-              ) : (
-                <Tag icon={<CloseCircleOutlined />} color="error">
-                  {item.requirement}
-                </Tag>
-              )}
-              {!item.passed && <Text type="danger"> - {item.message}</Text>}
-            </div>
-          ))}
+      <Collapse defaultActiveKey={["1", "2", "3"]}>
+        <Panel header="Bid Decision" key="1">
+          <Title level={4}>
+            Recommendation: {analysis.bid_decision.recommendation.toUpperCase()}
+          </Title>
+          <List
+            dataSource={analysis.bid_decision.decision_factors}
+            renderItem={(factor) => (
+              <List.Item>
+                <Text>{factor}</Text>
+              </List.Item>
+            )}
+          />
         </Panel>
 
-        <Panel header="Eligibility Criteria" key="2">
-          {analysis.eligibility.map((item, index) => (
-            <div key={index} style={{ marginBottom: "8px" }}>
-              {item.met ? (
-                <Tag icon={<CheckCircleOutlined />} color="success">
-                  {item.criteria}
+        <Panel header="Compliance Analysis" key="2">
+          <List
+            dataSource={[
+              {
+                name: "State Registration",
+                status:
+                  analysis.compliance_analysis.legal_eligibility
+                    .state_registration.status,
+              },
+              {
+                name: "Certifications",
+                status:
+                  analysis.compliance_analysis.legal_eligibility.certifications
+                    .status,
+                missing:
+                  analysis.compliance_analysis.legal_eligibility.certifications
+                    .missing,
+              },
+            ]}
+            renderItem={(item) => (
+              <List.Item>
+                <Tag color={item.status === "compliant" ? "success" : "error"}>
+                  {item.name}
                 </Tag>
-              ) : (
-                <Tag icon={<WarningOutlined />} color="warning">
-                  {item.criteria}
-                </Tag>
-              )}
-              <Text>{item.description}</Text>
-            </div>
-          ))}
+                {item.missing && (
+                  <Text type="danger">Missing: {item.missing.join(", ")}</Text>
+                )}
+              </List.Item>
+            )}
+          />
         </Panel>
 
-        <Panel header="Submission Checklist" key="3">
-          <ul>
-            {analysis.checklist.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        </Panel>
-
-        <Panel header="Contract Risks" key="4">
-          {analysis.risks.map((risk, index) => (
-            <div key={index} style={{ marginBottom: "16px" }}>
-              <Title level={5}>{risk.title}</Title>
-              <Text>{risk.description}</Text>
-              {risk.suggestion && (
-                <div style={{ marginTop: "8px" }}>
-                  <Text strong>Suggestion: </Text>
-                  <Text type="secondary">{risk.suggestion}</Text>
-                </div>
-              )}
-            </div>
-          ))}
+        <Panel header="Risk Assessment" key="3">
+          <List
+            dataSource={analysis.contract_risk_analysis.biased_clauses}
+            renderItem={(risk) => (
+              <List.Item>
+                <List.Item.Meta
+                  title={
+                    <span>
+                      <Tag
+                        color={risk.risk_level === "high" ? "error" : "warning"}
+                      >
+                        {risk.risk_level.toUpperCase()}
+                      </Tag>
+                      {risk.clause_type}
+                    </span>
+                  }
+                  description={risk.text}
+                />
+              </List.Item>
+            )}
+          />
         </Panel>
       </Collapse>
     </Card>

@@ -9,18 +9,19 @@
 }
 
 .dark-theme .ant-card {
-  background: #1f1f1f;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   color: rgba(255, 255, 255, 0.85);
-  border-color: #303030;
 }
 
 .dark-theme .ant-card-head {
   color: rgba(255, 255, 255, 0.85);
-  border-bottom-color: #303030;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .dark-theme .ant-statistic-title {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .dark-theme .ant-statistic-content {
@@ -130,6 +131,31 @@
 
 .dark-theme .ant-typography {
   color: rgba(255, 255, 255, 0.85);
+}
+
+/* Dark theme enhancements */
+.dark-theme .ant-descriptions-bordered .ant-descriptions-item-label {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.dark-theme .ant-descriptions-bordered .ant-descriptions-item-content {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .ant-list-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .ant-alert {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .ant-descriptions-bordered .ant-descriptions-view {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.project-detail-container .ant-card + .ant-card {
+  margin-top: 16px;
 }
 
 /* Responsive adjustments */

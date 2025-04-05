@@ -15,7 +15,10 @@ export const ProjectStatusOverview = ({ projects }) => (
           </Link>
         </div>
         <Progress
-          percent={project.analysis.compliance.score}
+          percent={
+            project.compliance_analysis.legal_eligibility.certifications
+              .compliance_score
+          }
           status={
             project.status === "completed"
               ? "success"
