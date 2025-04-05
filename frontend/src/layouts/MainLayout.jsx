@@ -2,7 +2,7 @@ import { Layout, Menu } from "antd";
 import { Link } from "react-router-dom";
 import {
   DashboardOutlined,
-  FileTextOutlined,
+  ProjectOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 
@@ -28,8 +28,8 @@ export const MainLayout = ({ children }) => {
           <Menu.Item key="1" icon={<DashboardOutlined />}>
             <Link to="/">Dashboard</Link>
           </Menu.Item>
-          <Menu.Item key="2" icon={<FileTextOutlined />}>
-            <Link to="/documents">Documents</Link>
+          <Menu.Item key="2" icon={<ProjectOutlined />}>
+            <Link to="/projects">Projects</Link>
           </Menu.Item>
         </Menu>
       </Sider>

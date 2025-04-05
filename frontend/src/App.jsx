@@ -1,8 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { MainLayout } from "./layouts/MainLayout";
 import { Dashboard } from "./pages/Dashboard";
-import { Documents } from "./pages/Documents";
-// Add this import at the top of App.jsx
+import { Projects } from "./pages/Projects";
+import { ProjectDetail } from "./pages/ProjectDetail";
+import { ProjectUpload } from "./pages/ProjectUpload";
 import "./App.css";
 
 function App() {
@@ -12,7 +13,9 @@ function App() {
         <MainLayout>
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/documents" element={<Documents />} />
+            <Route path="/projects/new" element={<ProjectUpload />} />
+            <Route path="/projects/:id" element={<ProjectDetail />} />
+            <Route path="/projects" element={<Projects />} />
           </Routes>
         </MainLayout>
       </div>

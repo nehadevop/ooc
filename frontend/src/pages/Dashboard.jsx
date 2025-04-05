@@ -6,30 +6,62 @@ import {
   WarningOutlined,
   ClockCircleOutlined,
 } from "@ant-design/icons";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { sampleProjects } from "../utils/mockData";
 
-const recentActivities = [
-  {
-    key: "1",
-    project: "DHS Cybersecurity RFP",
-    action: "Analysis Completed",
-    time: "2 hours ago",
-    status: "success",
-  },
-  {
-    key: "2",
-    project: "VA Health Records",
-    action: "Compliance Issues Found",
-    time: "1 day ago",
-    status: "warning",
-  },
-  {
-    key: "3",
-    project: "DoD Cloud Migration",
-    action: "New Document Uploaded",
-    time: "2 days ago",
-    status: "info",
-  },
-];
+// Calculate metrics from sample data
+const calculateMetrics = (projects) => {
+  return {
+    activeProjects: projects.filter((p) => p.status === "pending").length,
+    completedAnalyses: projects.filter((p) => p.status === "completed").length,
+    pendingReviews: projects.filter((p) => p.status === "issues").length,
+    teamMembers: Math.max(
+      ...projects.map((p) => p.analysis.teamMetrics.participants)
+    ),
+    averageCompliance: Math.round(
+      projects.reduce((acc, p) => acc + p.analysis.compliance.score, 0) /
+        projects.length
+    ),
+  };
+};
+
+// Generate recent activities from projects
+const generateRecentActivities = (projects) => {
+  return projects.map((project) => ({
+    key: project._id,
+    project: project.name,
+    action: getActionByStatus(project.status),
+    time: new Date(project.uploadDate).toLocaleDateString(),
+    status: getStatusType(project.status),
+  }));
+};
+
+const getActionByStatus = (status) => {
+  switch (status) {
+    case "completed":
+      return "Analysis Completed";
+    case "pending":
+      return "In Progress";
+    case "issues":
+      return "Issues Found";
+    default:
+      return "Status Unknown";
+  }
+};
+
+const getStatusType = (status) => {
+  switch (status) {
+    case "completed":
+      return "success";
+    case "pending":
+      return "info";
+    case "issues":
+      return "warning";
+    default:
+      return "info";
+  }
+};
 
 const statusIcons = {
   success: <CheckCircleOutlined style={{ color: "#52c41a" }} />,
@@ -80,6 +112,17 @@ const StatisticCard = ({ title, value, icon, color }) => (
 );
 
 export const Dashboard = () => {
+  const [metrics, setMetrics] = useState(null);
+  const [recentActivities, setRecentActivities] = useState([]);
+
+  useEffect(() => {
+    // Calculate metrics from sample data
+    setMetrics(calculateMetrics(sampleProjects));
+    setRecentActivities(generateRecentActivities(sampleProjects));
+  }, []);
+
+  if (!metrics) return null;
+
   return (
     <div style={{ padding: "24px", background: "#1f1f1f", minHeight: "100vh" }}>
       <h1 style={{ color: "#fff", marginBottom: "24px" }}>
@@ -90,28 +133,28 @@ export const Dashboard = () => {
         <Col xs={24} sm={12} md={6}>
           <StatisticCard
             title="Active Projects"
-            value={5}
+            value={metrics.activeProjects}
             icon={<FileTextOutlined style={{ color: "#1890ff" }} />}
           />
         </Col>
         <Col xs={24} sm={12} md={6}>
           <StatisticCard
             title="Team Members"
-            value={8}
+            value={metrics.teamMembers}
             icon={<TeamOutlined style={{ color: "#722ed1" }} />}
           />
         </Col>
         <Col xs={24} sm={12} md={6}>
           <StatisticCard
             title="Completed Analyses"
-            value={12}
+            value={metrics.completedAnalyses}
             icon={<CheckCircleOutlined style={{ color: "#52c41a" }} />}
           />
         </Col>
         <Col xs={24} sm={12} md={6}>
           <StatisticCard
             title="Pending Reviews"
-            value={3}
+            value={metrics.pendingReviews}
             icon={<ClockCircleOutlined style={{ color: "#faad14" }} />}
           />
         </Col>
@@ -129,39 +172,36 @@ export const Dashboard = () => {
               borderRadius: "8px",
             }}
           >
-            <div style={{ marginBottom: "16px" }}>
-              <div style={{ color: "#fff", marginBottom: "4px" }}>
-                DHS Cybersecurity RFP
+            {sampleProjects.map((project) => (
+              <div key={project._id} style={{ marginBottom: "16px" }}>
+                <div style={{ color: "#fff", marginBottom: "4px" }}>
+                  <Link
+                    to={`/projects/${project._id}`}
+                    style={{ color: "#fff" }}
+                  >
+                    {project.name}
+                  </Link>
+                </div>
+                <Progress
+                  percent={project.analysis.compliance.score}
+                  status={
+                    project.status === "completed"
+                      ? "success"
+                      : project.status === "issues"
+                      ? "exception"
+                      : "active"
+                  }
+                  strokeColor={
+                    project.status === "completed"
+                      ? "#52c41a"
+                      : project.status === "issues"
+                      ? "#ff4d4f"
+                      : "#1890ff"
+                  }
+                  trailColor="rgba(255, 255, 255, 0.12)"
+                />
               </div>
-              <Progress
-                percent={75}
-                status="active"
-                strokeColor="#1890ff"
-                trailColor="rgba(255, 255, 255, 0.12)"
-              />
-            </div>
-            <div style={{ marginBottom: "16px" }}>
-              <div style={{ color: "#fff", marginBottom: "4px" }}>
-                VA Health Records
-              </div>
-              <Progress
-                percent={30}
-                status="exception"
-                strokeColor="#ff4d4f"
-                trailColor="rgba(255, 255, 255, 0.12)"
-              />
-            </div>
-            <div style={{ marginBottom: "16px" }}>
-              <div style={{ color: "#fff", marginBottom: "4px" }}>
-                DoD Cloud Migration
-              </div>
-              <Progress
-                percent={90}
-                status="success"
-                strokeColor="#52c41a"
-                trailColor="rgba(255, 255, 255, 0.12)"
-              />
-            </div>
+            ))}
           </Card>
         </Col>
         <Col xs={24} lg={12}>
@@ -181,13 +221,13 @@ export const Dashboard = () => {
               <Col>
                 <Progress
                   type="circle"
-                  percent={65}
+                  percent={metrics.averageCompliance}
                   strokeColor="#1890ff"
                   trailColor="rgba(255, 255, 255, 0.12)"
                   format={(percent) => (
                     <div style={{ textAlign: "center" }}>
                       <div style={{ color: "#fff", fontSize: "16px" }}>
-                        Compliance
+                        Average Compliance
                       </div>
                       <div
                         style={{
@@ -205,13 +245,15 @@ export const Dashboard = () => {
               <Col>
                 <Progress
                   type="circle"
-                  percent={85}
+                  percent={Math.round(
+                    (metrics.completedAnalyses / sampleProjects.length) * 100
+                  )}
                   strokeColor="#52c41a"
                   trailColor="rgba(255, 255, 255, 0.12)"
                   format={(percent) => (
                     <div style={{ textAlign: "center" }}>
                       <div style={{ color: "#fff", fontSize: "16px" }}>
-                        Eligibility
+                        Completion Rate
                       </div>
                       <div
                         style={{
@@ -244,8 +286,6 @@ export const Dashboard = () => {
           rowClassName={() => "dark-table-row"}
         />
       </Card>
-
-    
     </div>
   );
 };

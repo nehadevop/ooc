@@ -48,6 +48,42 @@
 
 .dark-theme .ant-tag {
   color: rgba(255, 255, 255, 0.85);
+  border-width: 2px;
+  font-weight: 600;
+  padding: 4px 8px;
+}
+
+.dark-theme .ant-tag-success {
+  background: rgba(82, 196, 26, 0.2);
+  border-color: #52c41a;
+  color: #b7eb8f;
+}
+
+.dark-theme .ant-tag-error {
+  background: rgba(255, 77, 79, 0.2);
+  border-color: #ff4d4f;
+  color: #ffa39e;
+}
+
+.dark-theme .ant-tag-warning {
+  background: rgba(250, 173, 20, 0.2);
+  border-color: #faad14;
+  color: #ffd666;
+}
+
+.dark-theme .ant-tag-processing {
+  background: rgba(22, 119, 255, 0.15);
+  border-color: #1677ff;
+  color: #69b1ff;
+}
+
+/* Custom Progress Bar Styles */
+.dark-theme .ant-progress-text {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.dark-theme .ant-progress-inner {
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Layout fixes */
@@ -70,7 +106,7 @@
 }
 
 /* Documents page specific styles */
-.documents-container {
+.project-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
@@ -98,7 +134,7 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .documents-container {
+  .project-container {
     padding: 16px;
   }
 }
