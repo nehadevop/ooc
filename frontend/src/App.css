@@ -1,42 +1,104 @@
-#root {
-  max-width: 1280px;
+/* src/App.css */
+.dark-theme {
+  background-color: #141414;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.dark-theme .ant-layout {
+  background: #141414;
+}
+
+.dark-theme .ant-card {
+  background: #1f1f1f;
+  color: rgba(255, 255, 255, 0.85);
+  border-color: #303030;
+}
+
+.dark-theme .ant-card-head {
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom-color: #303030;
+}
+
+.dark-theme .ant-statistic-title {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.dark-theme .ant-statistic-content {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.dark-theme .ant-table {
+  background: #1f1f1f;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.dark-theme .ant-table-thead > tr > th {
+  background: #1d1d1d;
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom-color: #303030;
+}
+
+.dark-theme .ant-table-tbody > tr > td {
+  border-bottom-color: #303030;
+}
+
+.dark-theme .ant-table-tbody > tr:hover > td {
+  background: #2a2a2a !important;
+}
+
+.dark-theme .ant-tag {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Layout fixes */
+.dashboard-container {
+  padding: 24px;
+}
+
+.stat-card {
+  height: 100%;
+}
+
+.activity-card {
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 12px;
+  }
+}
+
+/* Documents page specific styles */
+.documents-container {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 24px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.upload-card,
+.analysis-card {
+  margin-bottom: 24px;
+  border-radius: 8px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.dark-theme .upload-card,
+.dark-theme .analysis-card {
+  background: #1f1f1f;
+  border-color: #303030;
+}
+
+.dark-theme .ant-divider {
+  border-color: #303030;
+}
+
+.dark-theme .ant-typography {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .documents-container {
+    padding: 16px;
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
