@@ -1,53 +1,72 @@
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import PyPDFLoader
 import os
-import uuid
-from datetime import datetime
-from pathlib import Path
-from dotenv import load_dotenv
-
-load_dotenv()
+from typing import List, Dict, Any
+import ollama
+from sentence_transformers import SentenceTransformer
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 class VectorStore:
     def __init__(self):
-        self.embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-mpnet-base-v2"
+        self.llm_client = ollama.Client()
+        self.embedding_model = SentenceTransformer(
+            "sentence-transformers/all-MiniLM-L6-v2"
         )
-        self.persist_directory = "db"
-        self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000, chunk_overlap=200
-        )
+        self.documents = []  # Store documents in memory
 
-    async def store_documents(self, documents):
-        """Store documents in vector database"""
+    async def store_documents(self, documents: List[Dict[str, Any]]) -> int:
+        """Store documents with their embeddings"""
         try:
-            texts = [doc["text"] for doc in documents]
-            metadatas = [doc["metadata"] for doc in documents]
-            embeddings = self.embeddings.embed_documents(texts)
+            print(f"Storing {len(documents)} documents")
+            for doc in documents:
+                # Generate embedding for the document text
+                embedding = self.embedding_model.encode(doc["text"])
+                print(f"Generated embedding shape: {embedding.shape}")
 
-            vectordb = Chroma.from_documents(
-                documents=documents,
-                embedding=self.embeddings,
-                persist_directory=self.persist_directory,
-            )
-            vectordb.persist()
+                # Store document with its embedding
+                self.documents.append(
+                    {
+                        "text": doc["text"],
+                        "embedding": embedding,
+                        "metadata": doc.get("metadata", {}),
+                    }
+                )
+
+            print(f"Total documents stored: {len(self.documents)}")
             return len(documents)
         except Exception as e:
             print(f"Error storing documents: {e}")
             return 0
 
-    async def search(self, query, k=3):
-        """Search vector database for relevant documents"""
+    async def search(self, query: str, k: int = 3) -> List[Dict[str, Any]]:
+        """Search for similar documents using embeddings"""
         try:
-            vectordb = Chroma(
-                persist_directory=self.persist_directory,
-                embedding_function=self.embeddings,
-            )
-            docs = vectordb.similarity_search(query, k=k)
-            return [doc.page_content for doc in docs]
+            # Generate embedding for the query
+            query_embedding = self.embedding_model.encode(query)
+
+            if not self.documents:
+                return []
+
+            # Get all stored embeddings
+            embeddings = np.array([doc["embedding"] for doc in self.documents])
+
+            # Calculate similarities
+            similarities = cosine_similarity([query_embedding], embeddings)[0]
+
+            # Get top-k results
+            top_k_indices = np.argsort(similarities)[-k:][::-1]
+
+            results = []
+            for idx in top_k_indices:
+                results.append(
+                    {
+                        "text": self.documents[idx]["text"],
+                        "metadata": self.documents[idx]["metadata"],
+                        "score": float(similarities[idx]),
+                    }
+                )
+
+            return results
         except Exception as e:
             print(f"Error during search: {e}")
             return []
