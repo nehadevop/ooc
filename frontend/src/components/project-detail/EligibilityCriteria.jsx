@@ -18,23 +18,22 @@ export const EligibilityCriteria = ({ criteria }) => (
       message={`Status: ${criteria.eligibility_status.toUpperCase()}`}
       type={criteria.eligibility_status === "eligible" ? "success" : "error"}
       showIcon
-      style={{
-        marginBottom: 16,
+      style={{ 
+        marginBottom: 16, 
         background: "rgba(255, 255, 255, 0.04)",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
+        color: "rgba(255, 255, 255, 0.85)"
       }}
     />
     <Statistic
       title={
-        <span style={{ color: "rgba(255, 255, 255, 0.65)" }}>
+        <span style={{ color: "rgba(255, 255, 255, 0.85)" }}>
           Eligibility Score
         </span>
       }
       value={criteria.score}
       suffix={`/${criteria.threshold}`}
       valueStyle={{
-        color:
-          criteria.score >= criteria.threshold ? colors.success : colors.error,
+        color: criteria.score >= criteria.threshold ? colors.success : colors.error,
         fontSize: "24px",
       }}
       style={{ marginBottom: 16 }}
@@ -70,6 +69,7 @@ export const EligibilityCriteria = ({ criteria }) => (
           />
         </List.Item>
       )}
+      style={{ color: "rgba(255, 255, 255, 0.85)" }}
     />
   </Card>
 );

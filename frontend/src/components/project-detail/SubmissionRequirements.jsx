@@ -48,11 +48,24 @@ export const SubmissionRequirements = ({ requirements }) => (
           </span>
         }
       >
-        {requirements.attachments.required_forms.map((form) => (
-          <Tag key={form.form_id} color="processing" style={{ margin: "4px" }}>
-            {form.form_id}: {form.description}
-          </Tag>
-        ))}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          {requirements.attachments.required_forms.map((form) => (
+            <Tag 
+              key={form.form_id} 
+              color="processing" 
+              style={{ 
+                margin: 0,
+                maxWidth: '100%',
+                whiteSpace: 'normal',
+                height: 'auto',
+                padding: '4px 8px',
+                lineHeight: '1.5'
+              }}
+            >
+              {form.form_id}: {form.description}
+            </Tag>
+          ))}
+        </div>
       </Descriptions.Item>
       <Descriptions.Item
         label={
